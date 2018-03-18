@@ -12,24 +12,63 @@ public class AndroidStrapElement {
     private boolean isExist = false;
     private String elementId;
 
-
+    private String ele ;
 
     public AndroidStrapElement(By by){
-        String res = Driver.runStep(by.toString());
+        ele = by.toString();
+        String res = Driver.runStep(ele);
 
         try {
             JSONObject j = new JSONObject(res);
             if (j.getInt("status") == 0) {
-                setExist(true);
+
                 JSONArray jsonArray = j.getJSONArray("value");
                 if(jsonArray.length() > 0) {
                     setElementId(jsonArray.getJSONObject(0).getString("ELEMENT"));
+                    setExist(true);
                 }
             }
         }catch (JSONException e){
             e.printStackTrace();
         }
 
+    }
+
+    public boolean find(){
+        String res = Driver.runStep(ele);
+
+        try {
+            JSONObject j = new JSONObject(res);
+            if (j.getInt("status") == 0) {
+
+                JSONArray jsonArray = j.getJSONArray("value");
+                if(jsonArray.length() > 0) {
+                    setElementId(jsonArray.getJSONObject(0).getString("ELEMENT"));
+                    setExist(true);
+                }
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return isExist;
+    }
+
+
+    public boolean input(String value){
+        if(!isExist){
+            return false;
+        }
+        TextParams textParams = new TextParams();
+        textParams.setElementId(getElementId());
+        textParams.setText(value);
+        textParams.setUnicodeKeyboard(true);
+        textParams.setReplace(false);
+        CMD cmd = new CMD();
+        cmd.setAction("element:setText");
+        cmd.setCmd("action");
+        cmd.setParames(textParams);
+        String res = Driver.runStep(cmd.toString());
+        return true;
     }
 
     public boolean click(){
@@ -56,16 +95,15 @@ public class AndroidStrapElement {
 
     }
 
-
-    public static void main(String[] args) {
-        AndroidStrapElement androidStrapElement = new AndroidStrapElement(By.id("xxx"));
+    public String toString(){
+        return ele;
     }
 
     public boolean isExist() {
         return isExist;
     }
 
-    public void setExist(boolean exist) {
+    private void setExist(boolean exist) {
         isExist = exist;
     }
 

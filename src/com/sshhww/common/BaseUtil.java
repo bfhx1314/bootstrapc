@@ -3,8 +3,7 @@ package com.sshhww.common;
 import io.appium.android.bootstrap.Logger;
 import okhttp3.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -66,6 +65,53 @@ public class BaseUtil {
         });
     }
 
+    public static String returnExec(String cmd) {
+        Logger.debug("cmd: " + cmd);
+        Process p;
+        String str = "";
+        try {
+            //执行命令
+            p = Runtime.getRuntime().exec(cmd);
+            BaseUtil.wait(2);
+            //取得命令结果的输出流
+            InputStream fis=p.getInputStream();
+            //用一个读输出流类去读
+            InputStreamReader isr=new InputStreamReader(fis,"GB2312");
+            //用缓冲器读行
+            BufferedReader br=new BufferedReader(isr);
+            String line=null;
+            //直到读完为止
+            while((line=br.readLine())!=null) {
+                str = str + line + ":";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
+    public static void exec(String cmd) {
+        Logger.debug("cmd: " + cmd);
+        try {
+            Runtime.getRuntime().exec(cmd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean isEmpty(String o){
+        if(null == o || o.isEmpty()){
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isNotEmpty(String o){
+        if(null != o && !o.isEmpty()){
+            return true;
+        }
+        return false;
+    }
 
 }
 

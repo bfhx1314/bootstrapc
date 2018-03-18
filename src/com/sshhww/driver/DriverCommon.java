@@ -4,8 +4,10 @@ package com.sshhww.driver;
 import com.sshhww.common.BaseUtil;
 import com.sshhww.common.bean.CMD;
 import com.sshhww.common.bean.DragParams;
-
-import java.io.IOException;
+import com.sshhww.common.bean.PressKeyParams;
+import io.appium.android.bootstrap.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class DriverCommon {
 
@@ -28,14 +30,25 @@ public class DriverCommon {
         DriverCommon.HEIGHT = HEIGHT;
     }
 
-
-
     public static AndroidStrapElement getAndroidStrapElementById(String id){
         return new AndroidStrapElement(By.id(id));
     }
 
     public static AndroidStrapElement getAndroidStrapElementByXpath(String xpath){
         return new AndroidStrapElement(By.xpath(xpath));
+    }
+
+
+    public static boolean pressKeyCode(int code){
+        PressKeyParams p = new PressKeyParams();
+        p.setKeycode(code);
+        p.setMetastate(null);
+        CMD cmd = new CMD();
+        cmd.setAction("pressKeyCode");
+        cmd.setCmd("action");
+        cmd.setParames(p);
+        String res = Driver.runStep(cmd.toString());
+        return result(res);
     }
 
 
@@ -107,23 +120,52 @@ public class DriverCommon {
 
 
     public static void startApp(String packageName){
-        try {
-            Runtime.getRuntime().exec(
-                    "am start -W -n " + packageName);
-            BaseUtil.wait(5);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        BaseUtil.exec("am start -W -n " + packageName);
+        BaseUtil.wait(5);
     }
 
     public static void closeApp(String packageName){
+        BaseUtil.exec("am force-stop " + packageName);
+    }
+
+    public static boolean isExistByPackageName(String packageName){
+        String res = BaseUtil.returnExec("pm list package " + packageName);
+        if(res.equalsIgnoreCase("package:" + packageName + ":")){
+            return true;
+        }
+        return false;
+    }
+
+    public static void installApk(String apkPath){
+        String res = BaseUtil.returnExec("pm install " + apkPath);
+        if(BaseUtil.isNotEmpty(res) && res.equalsIgnoreCase("Success")){
+            Logger.info("apk安装成功:" + apkPath);
+        }else{
+            Logger.error("apk安装失败:" + apkPath);
+        }
+    }
+
+    public static void main(String[] args) {
+        String res = "\tpkg: unlock_apk-debug.apk\n" +
+                "Success";
+        System.out.println(res.substring(res.length()-7,res.length()));
+    }
+
+
+    private static boolean result(String res){
         try {
-            Runtime.getRuntime().exec(
-                    "am force-stop " + packageName);
-            BaseUtil.wait(5);
-        } catch (IOException e) {
+            JSONObject j = new JSONObject(res);
+            if (j.getInt("status") == 0) {
+
+                JSONObject value = j.getJSONObject("value");
+                if(value.toString().equalsIgnoreCase("true")) {
+                    return true;
+                }
+            }
+        }catch (JSONException e){
             e.printStackTrace();
         }
+        return false;
     }
 
 }

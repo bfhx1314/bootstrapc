@@ -21,6 +21,9 @@ import com.sshhww.common.BaseUtil;
 import com.sshhww.common.SshhwwTask;
 import com.sshhww.common.bean.TaskRecordVo;
 import com.sshhww.driver.*;
+import com.sshhww.task.BaseTask;
+import com.sshhww.task.QttLookAtNewsTask;
+import com.sshhww.task.TaobaoLiveTask;
 
 
 /**
@@ -29,23 +32,57 @@ import com.sshhww.driver.*;
 public class Bootstrap extends UiAutomatorTestCase {
 
 
-    DriverCommon driverCommon = new DriverCommon();
+    private final String UNLOCK_APK_PATH = "/data/local/tmp/unlock_apk-debug.apk";
+    private final String SETTINGS_APK_PATH = "/data/local/tmp/settings_apk-debug.apk";
+    private final String UNICODEIME_APK_PATH = "/data/local/tmp/UnicodeIME-debug.apk";
+
+
 
     public void testRunServer() {
 
         Logger.info("*********开始*********");
-        DriverCommon.setHEIGHT(getUiDevice().getDisplayHeight());
-        DriverCommon.setWIDTH(getUiDevice().getDisplayWidth());
 
-//        Logger.info("currentPackage: " + getUiDevice().getCurrentPackageName());
-        handleClientData();
+        //初始化
+        if(init()){
+            //运行
+            handleClientData();
+        }else{
+            Logger.error("脚本运行失败");
+        }
+
         Logger.info("*********结束*********");
     }
 
+    private boolean init(){
+        DriverCommon.setHEIGHT(getUiDevice().getDisplayHeight());
+        DriverCommon.setWIDTH(getUiDevice().getDisplayWidth());
+
+        //解锁
+        Logger.info("current package name: " + getUiDevice().getCurrentPackageName());
+        if(getUiDevice().getCurrentPackageName().equalsIgnoreCase("com.android.keyguard")){
+            Logger.info("屏幕为锁定状态,需要解锁.");
+            unlock();
+            if(getUiDevice().getCurrentPackageName().equalsIgnoreCase("com.android.keyguard")){
+                Logger.error("屏幕解锁失败");
+                return false;
+            }else{
+                Logger.info("屏幕解锁成功");
+            }
+        }
+
+        settings();
+        //支持中文
+        unicode();
+
+        return true;
+    }
 
 
     public void handleClientData() {
-        runTask();
+        while(true){
+            BaseUtil.wait(5);
+        }
+//        runTask("TaobaoLive",null);
     }
 
     private void runTask(){
@@ -56,7 +93,7 @@ public class Bootstrap extends UiAutomatorTestCase {
                 if(taskRecordVo.getTaskRecordId() == -1){
                     Logger.error(taskRecordVo.getDetail());
                 }else{
-                    runTask(taskRecordVo.getTaskRecordName());
+                    runTask(taskRecordVo.getTaskRecordName(),taskRecordVo.getData());
                     SshhwwTask.taskDone(taskRecordVo.getTaskRecordId());
                 }
 
@@ -68,58 +105,49 @@ public class Bootstrap extends UiAutomatorTestCase {
         }
     }
 
-    private void runTask(String taskName){
-        if (taskName.equalsIgnoreCase("QttLookAtNewsTime")) {
-
-            if(getUiDevice().getCurrentPackageName().equalsIgnoreCase("com.jifen.qukan")){
-                DriverCommon.closeApp("com.jifen.qukan");
-            }
-
-            //运行看新闻
-            DriverCommon.startApp("com.jifen.qukan/com.jifen.qukan.view.activity.JumpActivity");
-            int lookAtNewCount = BaseUtil.getNumberRange(8,15);
-            for(int i = 0; i < lookAtNewCount; i ++) {
-                BaseUtil.wait(3);
-                DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
-                click(DriverCommon.getAndroidStrapElementByXpath("//android.support.v7.widget.RecyclerView[@resource-id='com.jifen.qukan:id/recycler_view']/android.widget.LinearLayout[1]"),true);
-                BaseUtil.wait(3);
-                DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
-                click(DriverCommon.getAndroidStrapElementByXpath("//android.view.View[contains(@content-desc,'展开查看全文')]"),true);
-                BaseUtil.wait(3);
-                DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
-                BaseUtil.wait(3);
-                DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
-                BaseUtil.wait(3);
-                DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
-                BaseUtil.wait(3);
-                click(DriverCommon.getAndroidStrapElementById("com.jifen.qukan:id/view_back"),true);
-            }
-
-        }
-
-    }
-
-    private boolean repairStep(){
-        AndroidStrapElement dnp_text_cancel = DriverCommon.getAndroidStrapElementById("com.jifen.qukan:id/dnp_text_cancel");
-        if(dnp_text_cancel.isExist()){
-            return dnp_text_cancel.click();
-        }
-        AndroidStrapElement avnd_img_back = DriverCommon.getAndroidStrapElementById("com.jifen.qukan:id/avnd_img_back");
-        if(avnd_img_back.isExist()){
-            return avnd_img_back.click();
-        }
-        return false;
-    }
-
-    private void click(AndroidStrapElement androidStrapElement, boolean isRetry){
-        if(!androidStrapElement.click()){
-            if(isRetry && repairStep()){
-                androidStrapElement.click();
-            }
+    private void runTask(String taskName, Object data){
+        switch (taskName){
+            case "QttLookAtNewsTime":
+                runScript(new QttLookAtNewsTask());
+                break;
+            case "TaobaoLive":
+                runScript(new TaobaoLiveTask());
+                break;
+            default:
+                Logger.error("未找到定义的任务类型脚本");
+                break;
         }
     }
 
+    private void runScript(BaseTask baseTask){
+//        if(getUiDevice().getCurrentPackageName().equalsIgnoreCase(baseTask.getAppPackage())){
+        DriverCommon.closeApp(baseTask.getAppPackage());
+        baseTask.runTask();
+    }
+
+    private void unlock(){
+        if(!DriverCommon.isExistByPackageName("io.appium.unlock")){
+            DriverCommon.installApk(UNLOCK_APK_PATH);
+        }
+        DriverCommon.startApp("io.appium.unlock/.Unlock -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000");
+    }
+
+    private void settings(){
+        if(!DriverCommon.isExistByPackageName("io.appium.settings")){
+            DriverCommon.installApk(SETTINGS_APK_PATH);
+        }
+        DriverCommon.startApp("io.appium.settings/.Settings -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000");
+    }
 
 
+    private void unicode(){
+        if(!DriverCommon.isExistByPackageName("io.appium.android.ime")){
+            DriverCommon.installApk(UNICODEIME_APK_PATH);
+        }
+        BaseUtil.returnExec("settings get secure default_input_method");
+        BaseUtil.returnExec("ime enable io.appium.android.ime/.UnicodeIME");
+        BaseUtil.returnExec("ime set io.appium.android.ime/.UnicodeIME");
+
+    }
 
 }
