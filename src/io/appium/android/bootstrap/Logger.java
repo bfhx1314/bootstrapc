@@ -51,7 +51,7 @@ public class Logger {
   private static boolean isFirst = true;
 
   private static void log(String content) {
-    //TODO 无法创建文件
+//    TODO 无法创建文件
 //    if(isFirst){
 //      File file = new File(logPath);
 //      if(!file.exists()){

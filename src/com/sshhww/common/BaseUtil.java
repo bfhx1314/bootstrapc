@@ -1,11 +1,10 @@
 package com.sshhww.common;
 
 import io.appium.android.bootstrap.Logger;
-import okhttp3.*;
 
 import java.io.*;
+import java.security.MessageDigest;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by limengnan on 2018/3/9.
@@ -33,37 +32,7 @@ public class BaseUtil {
         int s = random.nextInt(max) % (max - min + 1) + min;
         return s;
     }
-    public static void uploadMultiFile(String url, File file) {
-        RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("file", file.getName(), fileBody)
-                .addFormDataPart("path", "qutoutiao")
-                .build();
-        Request request = new Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build();
 
-
-        final okhttp3.OkHttpClient.Builder httpBuilder = new OkHttpClient.Builder();
-        OkHttpClient okHttpClient = httpBuilder
-                //设置超时
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(15, TimeUnit.SECONDS)
-                .build();
-        okHttpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                System.out.println("上传文件失败 : " + call.toString());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                System.out.println(response.toString());
-            }
-        });
-    }
 
     public static String returnExec(String cmd) {
         Logger.debug("cmd: " + cmd);
@@ -111,6 +80,53 @@ public class BaseUtil {
             return true;
         }
         return false;
+    }
+
+    // 计算文件的 MD5 值
+    public static String md5(File file) {
+        if (file == null || !file.isFile() || !file.exists()) {
+            return "";
+        }
+        FileInputStream in = null;
+        String result = "";
+        byte buffer[] = new byte[8192];
+        int len;
+        try {
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            in = new FileInputStream(file);
+            while ((len = in.read(buffer)) != -1) {
+                md5.update(buffer, 0, len);
+            }
+            byte[] bytes = md5.digest();
+
+            for (byte b : bytes) {
+                String temp = Integer.toHexString(b & 0xff);
+                if (temp.length() == 1) {
+                    temp = "0" + temp;
+                }
+                result += temp;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if(null!=in){
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
+    public static String isExistDir(String saveDir) throws IOException {
+        File downloadFile=new File(saveDir);
+        if(!downloadFile.mkdirs()){
+            downloadFile.createNewFile();
+        }
+        String savePath=downloadFile.getAbsolutePath();
+        return savePath;
     }
 
 }

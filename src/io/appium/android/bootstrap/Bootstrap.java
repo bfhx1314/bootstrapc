@@ -20,10 +20,12 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 import com.sshhww.common.BaseUtil;
 import com.sshhww.common.SshhwwTask;
 import com.sshhww.common.bean.TaskRecordVo;
+import com.sshhww.common.bean.WXCMUpdateVO;
 import com.sshhww.driver.*;
 import com.sshhww.task.BaseTask;
 import com.sshhww.task.QttLookAtNewsTask;
-import com.sshhww.task.TaobaoLiveTask;
+import com.sshhww.task.TaoBaoLiveTask;
+import com.sshhww.task.TaskEnum;
 
 
 /**
@@ -41,7 +43,6 @@ public class Bootstrap extends UiAutomatorTestCase {
     public void testRunServer() {
 
         Logger.info("*********开始*********");
-
         //初始化
         if(init()){
             //运行
@@ -53,40 +54,40 @@ public class Bootstrap extends UiAutomatorTestCase {
         Logger.info("*********结束*********");
     }
 
-    private boolean init(){
-        DriverCommon.setHEIGHT(getUiDevice().getDisplayHeight());
-        DriverCommon.setWIDTH(getUiDevice().getDisplayWidth());
-
-        //解锁
+    /**
+     * 初始化运行环境
+     */
+    private void runInit(){
         Logger.info("current package name: " + getUiDevice().getCurrentPackageName());
-        if(getUiDevice().getCurrentPackageName().equalsIgnoreCase("com.android.keyguard")){
-            Logger.info("屏幕为锁定状态,需要解锁.");
-            unlock();
-            if(getUiDevice().getCurrentPackageName().equalsIgnoreCase("com.android.keyguard")){
-                Logger.error("屏幕解锁失败");
-                return false;
-            }else{
-                Logger.info("屏幕解锁成功");
-            }
-        }
-
+        //解锁
+        unlock();
         settings();
         //支持中文
         unicode();
+    }
 
+    /**
+     * 初始化脚本运行环境
+     * @return
+     */
+    private boolean init(){
+        DriverCommon.setHEIGHT(getUiDevice().getDisplayHeight());
+        DriverCommon.setWIDTH(getUiDevice().getDisplayWidth());
         return true;
     }
 
 
     public void handleClientData() {
         while(true){
-            BaseUtil.wait(5);
-        }
-//        runTask("TaobaoLive",null);
-    }
 
-    private void runTask(){
-        while(true){
+            //检查脚本更新信息
+            //更新sshhwwstrap.jar
+            if(!SshhwwTask.getUpdate()){
+                BaseUtil.wait(120);
+                continue;
+            }
+
+            //获取任务
             TaskRecordVo taskRecordVo = SshhwwTask.getTask();
 
             if(taskRecordVo.getStatus().equalsIgnoreCase("1")) {
@@ -100,18 +101,18 @@ public class Bootstrap extends UiAutomatorTestCase {
             }else{
                 Logger.error("请求异常");
             }
-
-            BaseUtil.wait(10);
+            BaseUtil.wait(300);
         }
     }
 
     private void runTask(String taskName, Object data){
+        runInit();
         switch (taskName){
-            case "QttLookAtNewsTime":
+            case TaskEnum.QTTLOOKATNEWSTIME:
                 runScript(new QttLookAtNewsTask());
                 break;
-            case "TaobaoLive":
-                runScript(new TaobaoLiveTask());
+            case TaskEnum.TAOBAOLIVE:
+                runScript(new TaoBaoLiveTask());
                 break;
             default:
                 Logger.error("未找到定义的任务类型脚本");
@@ -120,7 +121,6 @@ public class Bootstrap extends UiAutomatorTestCase {
     }
 
     private void runScript(BaseTask baseTask){
-//        if(getUiDevice().getCurrentPackageName().equalsIgnoreCase(baseTask.getAppPackage())){
         DriverCommon.closeApp(baseTask.getAppPackage());
         baseTask.runTask();
     }

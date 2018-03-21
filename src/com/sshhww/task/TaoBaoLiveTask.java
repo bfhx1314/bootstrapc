@@ -5,12 +5,11 @@ import com.sshhww.driver.AndroidStrapElement;
 import com.sshhww.driver.By;
 import com.sshhww.driver.DragEnum;
 import com.sshhww.driver.DriverCommon;
-import io.appium.android.bootstrap.Logger;
 
 /**
  * Created by limengnan on 2018/3/12.
  */
-public class TaobaoLiveTask implements BaseTask  {
+public class TaoBaoLiveTask implements BaseTask  {
 
 
     public String getAppPackage(){

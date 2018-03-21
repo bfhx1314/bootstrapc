@@ -28,16 +28,13 @@ public class QttLookAtNewsTask implements BaseTask  {
             BaseUtil.wait(5);
             DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
 
-            if(!DriverCommon.getAndroidStrapElementByXpath("//android.support.v7.widget.RecyclerView[@resource-id='com.jifen.qukan:id/recycler_view']/android.widget.LinearLayout[1]").click()){
-                continue;
-            }
+            click(DriverCommon.getAndroidStrapElementByXpath("//android.support.v7.widget.RecyclerView[@resource-id='com.jifen.qukan:id/recycler_view']/android.widget.LinearLayout[1]"),true);
 
             BaseUtil.wait(3);
             DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
 
-            if(DriverCommon.getAndroidStrapElementByXpath("//android.view.View[contains(@content-desc,'展开查看全文')]").click()){
-                continue;
-            }
+            click(DriverCommon.getAndroidStrapElementByXpath("//android.view.View[contains(@content-desc,'展开查看全文')]"),true);
+
             BaseUtil.wait(3);
             DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
             BaseUtil.wait(3);
