@@ -1,6 +1,8 @@
 package com.sshhww.task;
 
 import com.sshhww.common.BaseUtil;
+import com.sshhww.common.HttpCommon;
+import com.sshhww.common.SshhwwTask;
 import com.sshhww.driver.AndroidStrapElement;
 import com.sshhww.driver.DragEnum;
 import com.sshhww.driver.DriverCommon;
@@ -12,6 +14,15 @@ import io.appium.android.bootstrap.Logger;
 public class QttLookAtNewsTask implements BaseTask  {
 
 
+
+    private final String APK_URL = "http://120.26.205.248:8080/apk/sshhww/apk/qukan_2_6_0_003.apk";
+    private final String APK_PATH = "/data/local/tmp/qukan_2_6_0_003.apk";
+
+
+
+
+
+
     public String getAppPackage(){
         return "com.jifen.qukan";
     }
@@ -19,7 +30,13 @@ public class QttLookAtNewsTask implements BaseTask  {
 
     @Override
     public void runTask()   {
-
+        if(!DriverCommon.isExistByPackageName("com.jifen.qukan")){
+            if (!BaseUtil.isFileExist(APK_PATH)) {
+                HttpCommon.download(APK_URL, APK_PATH);
+            }
+            BaseUtil.rootCommand("chmod 777 " + APK_PATH);
+            DriverCommon.installApk(APK_PATH);
+        }
 
         //运行看新闻
         DriverCommon.startApp("com.jifen.qukan/com.jifen.qukan.view.activity.JumpActivity");

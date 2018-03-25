@@ -129,6 +129,39 @@ public class BaseUtil {
         return savePath;
     }
 
+    public static boolean isFileExist(String saveDir){
+        File downloadFile=new File(saveDir);
+        return downloadFile.exists();
+    }
+
+    public static void rootCommand(String cmd) {
+        Logger.debug("cmd: " + cmd);
+        Process p = null;
+        String str = "";
+        DataOutputStream os = null;
+        try {
+            //执行命令
+            p = Runtime.getRuntime().exec("su");
+            os = new DataOutputStream(p.getOutputStream());
+            os.writeBytes(cmd + "\n");
+            os.writeBytes("exit\n");
+            os.flush();
+            p.waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally{
+            try{
+                if (os != null){
+                    os.close();
+                }
+                p.destroy();
+            }catch (Exception e){
+
+            }
+        }
+    }
+
+
 }
 
 

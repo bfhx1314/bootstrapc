@@ -20,6 +20,15 @@ public class SshhwwTask {
 
     private final static String jarUpdateUrl = "http://120.26.205.248:8080/update/wxcm/update.do?version=0&type=jar&md5=";
 
+
+    public final static String UPLOCK_APK_URL = "http://120.26.205.248:8080/apk/sshhww/unlock_apk-debug.apk";
+    public final static String SETTING_APK_URL = "http://120.26.205.248:8080/apk/sshhww/settings_apk-debug.apk";
+    public final static String UNICODEIME_APK_URL = "http://120.26.205.248:8080/apk/sshhww/UnicodeIME-debug.apk";
+
+    public final static String UNLOCK_APK_PATH = "/data/local/tmp/unlock_apk-debug.apk";
+    public final static String SETTINGS_APK_PATH = "/data/local/tmp/settings_apk-debug.apk";
+    public final static String UNICODEIME_APK_PATH = "/data/local/tmp/UnicodeIME-debug.apk";
+
     private final static String sshhwwstrapPath = "/data/local/tmp/sshhwwstrap.jar";
     private final static String sshhwwstrapPathTemp = "/data/local/tmp/sshhwwstrap_temp.jar";
 
@@ -78,6 +87,9 @@ public class SshhwwTask {
     }
 
 
+    public static void dowloadApk(String url, String path){
+        HttpCommon.download(url,path);
+    }
 
 
 

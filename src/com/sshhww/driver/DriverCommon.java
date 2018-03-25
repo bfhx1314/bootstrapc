@@ -138,11 +138,11 @@ public class DriverCommon {
 
     public static void installApk(String apkPath){
         String res = BaseUtil.returnExec("pm install " + apkPath);
-        if(BaseUtil.isNotEmpty(res) && res.equalsIgnoreCase("Success")){
-            Logger.info("apk安装成功:" + apkPath);
-        }else{
-            Logger.error("apk安装失败:" + apkPath);
-        }
+//        if(BaseUtil.isNotEmpty(res) && res.equalsIgnoreCase("Success")){
+//            Logger.info("apk安装成功:" + apkPath);
+//        }else{
+//            Logger.error("apk安装失败:" + apkPath);
+//        }
     }
 
     public static void main(String[] args) {
