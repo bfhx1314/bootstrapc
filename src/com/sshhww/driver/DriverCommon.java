@@ -158,8 +158,10 @@ public class DriverCommon {
             JSONObject j = new JSONObject(res);
             if (j.getInt("status") == 0) {
 
-                JSONObject value = j.getJSONObject("value");
-                if(value.toString().equalsIgnoreCase("true")) {
+                Object value = j.get("value");
+                if(value instanceof  Boolean){
+                    return ((Boolean) value).booleanValue();
+                }else if(value.toString().equalsIgnoreCase("true")) {
                     return true;
                 }
             }

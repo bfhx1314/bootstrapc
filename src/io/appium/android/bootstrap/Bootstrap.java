@@ -41,6 +41,7 @@ public class Bootstrap extends UiAutomatorTestCase {
     public void testRunServer() {
 
         Logger.info("*********开始*********");
+
         //初始化
         if(init()){
             //运行

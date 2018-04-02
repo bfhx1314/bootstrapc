@@ -58,7 +58,7 @@ public class HttpCommon {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println(response.toString());
+//                System.out.println(response.toString());
             }
         });
     }
@@ -91,7 +91,7 @@ public class HttpCommon {
                 fos.write(buf,0,len);
             }
             fos.flush();
-            Logger.info("更新文件下载完成");
+            Logger.info("文件下载完成");
         }catch (Exception e){
 
         }finally{

@@ -49,7 +49,7 @@ public class SshhwwTask {
     }
 
     public static void taskDone(int taskId){
-        HttpCommon.get(taskDoneUrl + taskId) ;
+        HttpCommon.get(taskDoneUrl + taskId + "&result=1") ;
     }
 
     public static boolean getUpdate(){

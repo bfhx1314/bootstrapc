@@ -2,7 +2,7 @@ package com.sshhww.common.bean;
 
 public class PressKeyParams {
     Integer keycode;
-    String metastate;
+    Integer metastate;
 
     public int getKeycode() {
         return keycode;
@@ -12,11 +12,11 @@ public class PressKeyParams {
         this.keycode = keycode;
     }
 
-    public String getMetastate() {
+    public Integer getMetastate() {
         return metastate;
     }
 
-    public void setMetastate(String metastate) {
+    public void setMetastate(Integer metastate) {
         this.metastate = metastate;
     }
 
@@ -24,7 +24,7 @@ public class PressKeyParams {
 
         String strn = "{" +
                 (keycode    == null ? "" : "\"keycode\":\"" + getKeycode() + "\",") +
-                ("\"metastate\":\"" + getMetastate() + "\",");
+                ( "\"metastate\":" + getMetastate() + ",");
         return (strn.lastIndexOf(",") == strn.length() - 1 ? strn.substring(0,strn.length()-1) : strn) + "}";
 
     }

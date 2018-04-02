@@ -15,8 +15,8 @@ public class QttLookAtNewsTask implements BaseTask  {
 
 
 
-    private final String APK_URL = "http://120.26.205.248:8080/apk/sshhww/apk/qukan_2_6_0_003.apk";
-    private final String APK_PATH = "/data/local/tmp/qukan_2_6_0_003.apk";
+    private final String APK_URL = "http://120.26.205.248:8080/apk/sshhww/apk/qukan.2.8.20.001.apk";
+    private final String APK_PATH = "/data/local/tmp/qukan.2.8.20.001.apk";
 
 
 
@@ -34,7 +34,7 @@ public class QttLookAtNewsTask implements BaseTask  {
             if (!BaseUtil.isFileExist(APK_PATH)) {
                 HttpCommon.download(APK_URL, APK_PATH);
             }
-            BaseUtil.rootCommand("chmod 777 " + APK_PATH);
+            BaseUtil.exec("chmod 777 " + APK_PATH);
             DriverCommon.installApk(APK_PATH);
         }
 
@@ -45,7 +45,7 @@ public class QttLookAtNewsTask implements BaseTask  {
             BaseUtil.wait(5);
             DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
 
-            click(DriverCommon.getAndroidStrapElementByXpath("//android.support.v7.widget.RecyclerView[@resource-id='com.jifen.qukan:id/recycler_view']/android.widget.LinearLayout[1]"),true);
+            click(DriverCommon.getAndroidStrapElementByXpath("//android.widget.TextView[@resource-id='com.jifen.qukan:id/sq'][1]"),true);
 
             BaseUtil.wait(3);
             DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
@@ -68,7 +68,7 @@ public class QttLookAtNewsTask implements BaseTask  {
             Logger.info("修复方案一(新闻弹窗)元素获取成功");
             return dnp_text_cancel.click();
         }
-        AndroidStrapElement avnd_img_back = DriverCommon.getAndroidStrapElementById("com.jifen.qukan:id/avnd_img_back");
+        AndroidStrapElement avnd_img_back = DriverCommon.getAndroidStrapElementById("com.jifen.qukan:id/kq");
         if(avnd_img_back.isExist()){
             Logger.info("修复方案二(视频按钮返回)元素获取成功");
             return avnd_img_back.click();

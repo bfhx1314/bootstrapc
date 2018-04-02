@@ -131,6 +131,7 @@ public class BaseUtil {
 
     public static boolean isFileExist(String saveDir){
         File downloadFile=new File(saveDir);
+        Logger.debug("文件:" + saveDir + "," + downloadFile.exists());
         return downloadFile.exists();
     }
 
