@@ -76,36 +76,30 @@ public class Bootstrap extends UiAutomatorTestCase {
 
 
     public void handleClientData() {
-        while(true){
-
-            try {
-                //检查脚本更新信息
-                //更新sshhwwstrap.jar
-                if (!SshhwwTask.getUpdate()) {
-//                    BaseUtil.wait(120);
-//                    continue;
-                }
-
-                //获取任务
-                TaskRecordVo taskRecordVo = SshhwwTask.getTask();
-
-                if (taskRecordVo.getStatus().equalsIgnoreCase("1")) {
-                    if (taskRecordVo.getTaskRecordId() == -1) {
-                        Logger.error(taskRecordVo.getDetail());
-                    } else {
-                        runTask(taskRecordVo.getTaskRecordName(), taskRecordVo.getData());
-                        SshhwwTask.taskDone(taskRecordVo.getTaskRecordId());
-                    }
-
-                } else {
-                    Logger.error("请求异常");
-                }
-            }catch (Exception e){
-                Logger.error(e.getMessage());
-                e.printStackTrace();
+        try {
+            //检查脚本更新信息
+            //更新sshhwwstrap.jar 需要更新 则重新启动
+            if (SshhwwTask.getUpdate()) {
+                return;
             }
 
-            BaseUtil.wait(300);
+            //获取任务
+            TaskRecordVo taskRecordVo = SshhwwTask.getTask();
+
+            if (taskRecordVo.getStatus().equalsIgnoreCase("1")) {
+                if (taskRecordVo.getTaskRecordId() == -1) {
+                    Logger.error(taskRecordVo.getDetail());
+                } else {
+                    runTask(taskRecordVo.getTaskRecordName(), taskRecordVo.getData());
+                    SshhwwTask.taskDone(taskRecordVo.getTaskRecordId());
+                }
+
+            } else {
+                Logger.error("请求异常");
+            }
+        }catch (Exception e){
+            Logger.error(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -134,7 +128,7 @@ public class Bootstrap extends UiAutomatorTestCase {
             if(!BaseUtil.isFileExist(SshhwwTask.UNLOCK_APK_PATH)) {
                 HttpCommon.download(SshhwwTask.UPLOCK_APK_URL,SshhwwTask.UNLOCK_APK_PATH);
             }
-            BaseUtil.rootCommand("chmod 777 " + SshhwwTask.UNLOCK_APK_PATH);
+            BaseUtil.returnExec("chmod 777 " + SshhwwTask.UNLOCK_APK_PATH);
             DriverCommon.installApk(SshhwwTask.UNLOCK_APK_PATH);
         }
         DriverCommon.startApp("io.appium.unlock/.Unlock -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000");
@@ -145,7 +139,7 @@ public class Bootstrap extends UiAutomatorTestCase {
             if (!BaseUtil.isFileExist(SshhwwTask.SETTINGS_APK_PATH)) {
                 HttpCommon.download(SshhwwTask.SETTING_APK_URL, SshhwwTask.SETTINGS_APK_PATH);
             }
-            BaseUtil.rootCommand("chmod 777 " + SshhwwTask.SETTINGS_APK_PATH);
+            BaseUtil.returnExec("chmod 777 " + SshhwwTask.SETTINGS_APK_PATH);
             DriverCommon.installApk(SshhwwTask.SETTINGS_APK_PATH);
         }
         DriverCommon.startApp("io.appium.settings/.Settings -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000");
@@ -157,7 +151,7 @@ public class Bootstrap extends UiAutomatorTestCase {
             if (!BaseUtil.isFileExist(SshhwwTask.UNICODEIME_APK_PATH)) {
                 HttpCommon.download(SshhwwTask.UNICODEIME_APK_URL, SshhwwTask.UNICODEIME_APK_PATH);
             }
-            BaseUtil.rootCommand("chmod 777 " + SshhwwTask.UNICODEIME_APK_PATH);
+            BaseUtil.returnExec("chmod 777 " + SshhwwTask.UNICODEIME_APK_PATH);
             DriverCommon.installApk(SshhwwTask.UNICODEIME_APK_PATH);
         }
         BaseUtil.returnExec("settings get secure default_input_method");

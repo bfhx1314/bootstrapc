@@ -1,0 +1,140 @@
+package com.sshhww.common;
+
+
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
+/**
+ * 定义正则表达式
+ * 
+ * @author limn
+ *
+ */
+public class RegExp {
+	
+
+	/**
+	 * 是否含中文字符
+	 * 
+	 * @param characters 被检查字符串
+	 * @return
+	 */
+	public static boolean isChineseCharacters(String characters) {
+		Matcher m = Pattern.compile("[^u4e00-u9fa5]").matcher(characters);
+		return m.find();
+	}
+	
+	/**
+	 * 是否含英文字符
+	 * 
+	 * @param characters 被检查字符串
+	 * @return
+	 */
+	public static boolean isEnglishCharacters(String characters) {
+		Matcher m = Pattern.compile("[u4e00-u9fa5]").matcher(characters);
+		return m.find();
+	}
+	
+	/**
+	 * 是否含英文、数字字符
+	 * 
+	 * @param characters 被检查字符串
+	 * @return
+	 */
+	public static boolean isEnglishNumCharacters(String characters) {
+		Matcher m = Pattern.compile("^[a-zA-Z0-9@_]+$").matcher(characters);
+		return m.find();
+	}
+	
+	/**
+	 * 是否含中文字符（判断每个字符）
+	 * 
+	 * @param characters 被检查字符串
+	 * @return
+	 */
+	public static boolean isChineseCharactersEach(String characters) {
+		boolean isChinese = false;
+		int charactersLen = characters.length();
+		for(int i=0;i<charactersLen;i++){
+			if (isChineseCharacters(String.valueOf(characters.charAt(i)))){
+				isChinese = true;
+				break;
+			}
+		}
+		return isChinese;
+	}
+
+	
+	/**
+	 * 查找字符
+	 * @param characters 被查找字符串
+	 * @param pattern 要查找的字符串
+	 * @return 
+	 */
+	public static boolean findCharacters(String characters, String pattern) {
+		Matcher m = Pattern.compile(pattern).matcher(characters);
+		return m.find();
+	}
+	
+	/**
+	 * 匹配字符串，返回ArrayList
+	 * @param characters 被查找字符串
+	 * @param pattern 要查找的字符串
+	 * @return
+	 */
+	public static ArrayList<String> matcherCharacters(String characters, String pattern) {
+		Matcher m = Pattern.compile(pattern).matcher(characters);
+		// 结合arrlist 返回合集
+		ArrayList<String> matcherArray = new ArrayList <String>();
+		while(m.find()){
+			matcherArray.add(m.group());
+		}
+		return matcherArray;
+	}
+	
+	/**
+	 * 过滤字符
+	 * @param strng 被过滤的字符串
+	 * @param filterchar 需要过滤的字符
+	 * @return
+	 */
+	public static String filterString(String characters ,String filterchar){
+		String strRe = "";
+		ArrayList<String> arrayList = matcherCharacters(characters,"[^\\"+filterchar+"]{1,}");
+		for (int i =0; i < arrayList.size(); i++) {
+			String str = arrayList.get(i);
+			strRe = strRe + str;
+		}
+		return strRe;
+	}
+	
+	
+	/**
+	 * 实例
+	 */
+	public static void main(String[] args){
+//		String url = "http://172.16.10.13/hoss-web/hoss-v2/app/account/login.html".replace("http://", "");
+//		url = url.split("/")[0];
+//		boolean aa = findCharacters("http://172.16.10.13/hoss-web/hoss-v2/app/account/login.html","http://.*/");
+//		ArrayList<String> bb = matcherCharacters("http://172.16.10.13/hoss-web/hoss-v2/app/account/login.html","([a-z0-9][a-z0-9\\-]*?\\.(?:com|cn|net|org|gov|info|la|cc|co)(?:\\.(?:cn|jp))?)$");
+//		String ip = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."  
+//                +"(00?\\d|1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."  
+//                +"(00?\\d|1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."  
+//                +"(00?\\d|1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$";
+//		String ip1 = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])(\\.(00?\\d|1\\d{2}|2[0-4]\\d|25[0-5][1-9\\d]|\\d)){3}";
+//		String a = "登陆:\\:\\1:aaaaa";
+//		a = "1.1.1.1";
+//		System.out.println(RegExp.findCharacters(a, ip));
+//		String[] b = RegExp.splitKeyWord(a);
+//		System.out.println(b);\
+		
+		ArrayList a = RegExp.matcherCharacters("必须在报备1分钟后才能发起带看", "\\d{1,}");
+		System.out.println(a);
+		
+		
+	}
+	
+	
+}

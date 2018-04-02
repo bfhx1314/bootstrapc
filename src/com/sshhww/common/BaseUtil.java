@@ -134,7 +134,7 @@ public class BaseUtil {
         return downloadFile.exists();
     }
 
-    public static void rootCommand(String cmd) {
+    public static void rootCommand1(String cmd) {
         Logger.debug("cmd: " + cmd);
         Process p = null;
         String str = "";

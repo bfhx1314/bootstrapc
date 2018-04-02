@@ -1,4 +1,4 @@
 #mvn dependency:copy-dependencies -DoutputDirectory=libs
 #ant build
-adb push bin/AppiumBootstrap.jar /data/local/tmp
-adb shell uiautomator runtest AppiumBootstrap.jar -c io.appium.android.bootstrap.Bootstrap
+adb push bin/sshhwwstrap.jar /data/local/tmp
+adb shell uiautomator runtest /data/local/tmp/sshhwwstrap.jar -c io.appium.android.bootstrap.Bootstrap
