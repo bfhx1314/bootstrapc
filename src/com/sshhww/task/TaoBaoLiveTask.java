@@ -5,6 +5,7 @@ import com.sshhww.driver.AndroidStrapElement;
 import com.sshhww.driver.By;
 import com.sshhww.driver.DragEnum;
 import com.sshhww.driver.DriverCommon;
+import io.appium.android.bootstrap.Bootstrap;
 
 /**
  * Created by limengnan on 2018/3/12.

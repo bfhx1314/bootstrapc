@@ -41,14 +41,12 @@ public class Bootstrap extends UiAutomatorTestCase {
     public void testRunServer() {
 
         Logger.info("*********开始*********");
+        init();
 
-        //初始化
-        if(init()){
-            //运行
-            handleClientData();
-        }else{
-            Logger.error("脚本运行失败");
-        }
+        Logger.debug("是否存在:" + DriverCommon.getAndroidStrapElementByXpath("//android.widget.RelativeLayout[@resource-id='com.jifen.qukan:id/w']").isExist());
+//        new QttLookAtNewsTask(this).runTask();
+//            //运行
+//            handleClientData();
 
         Logger.info("*********结束*********");
     }
@@ -69,10 +67,9 @@ public class Bootstrap extends UiAutomatorTestCase {
      * 初始化脚本运行环境
      * @return
      */
-    private boolean init(){
+    private void init(){
         DriverCommon.setHEIGHT(getUiDevice().getDisplayHeight());
         DriverCommon.setWIDTH(getUiDevice().getDisplayWidth());
-        return true;
     }
 
 
@@ -80,9 +77,9 @@ public class Bootstrap extends UiAutomatorTestCase {
         try {
             //检查脚本更新信息
             //更新sshhwwstrap.jar 需要更新 则重新启动
-            if (SshhwwTask.getUpdate()) {
-                return;
-            }
+//            if (SshhwwTask.getUpdate()) {
+//                return;
+//            }
 
             //获取任务
             TaskRecordVo taskRecordVo = SshhwwTask.getTask();
@@ -108,7 +105,7 @@ public class Bootstrap extends UiAutomatorTestCase {
         runInit();
         switch (taskName){
             case TaskEnum.QTTLOOKATNEWSTIME:
-                runScript(new QttLookAtNewsTask());
+                runScript(new QttLookAtNewsTask(this));
                 break;
             case TaskEnum.TAOBAOLIVE:
                 runScript(new TaoBaoLiveTask());
@@ -159,5 +156,6 @@ public class Bootstrap extends UiAutomatorTestCase {
         BaseUtil.returnExec("ime enable io.appium.android.ime/.UnicodeIME");
         BaseUtil.returnExec("ime set io.appium.android.ime/.UnicodeIME");
     }
+
 
 }
