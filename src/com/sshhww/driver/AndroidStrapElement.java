@@ -6,32 +6,25 @@ import com.sshhww.common.bean.TextParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.util.LinkedList;
+import java.util.List;
 
 public class AndroidStrapElement {
 
     private boolean isExist = false;
-    private String elementId;
-
     private String ele ;
+
+    private List<String> lists = new LinkedList<>();
 
     public AndroidStrapElement(By by){
         ele = by.toString();
-        String res = Driver.runStep(ele);
+        find();
 
-        try {
-            JSONObject j = new JSONObject(res);
-            if (j.getInt("status") == 0) {
+    }
 
-                JSONArray jsonArray = j.getJSONArray("value");
-                if(jsonArray.length() > 0) {
-                    setElementId(jsonArray.getJSONObject(0).getString("ELEMENT"));
-                    setExist(true);
-                }
-            }
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-
+    private AndroidStrapElement(String elementId){
+        setElementId(elementId);
+        setExist(true);
     }
 
     public boolean find(){
@@ -43,7 +36,9 @@ public class AndroidStrapElement {
 
                 JSONArray jsonArray = j.getJSONArray("value");
                 if(jsonArray.length() > 0) {
-                    setElementId(jsonArray.getJSONObject(0).getString("ELEMENT"));
+                    for(int i = 0 ; i < jsonArray.length() ; i ++) {
+                        lists.add(jsonArray.getJSONObject(i).getString("ELEMENT"));
+                    }
                     setExist(true);
                 }
             }
@@ -51,6 +46,14 @@ public class AndroidStrapElement {
             e.printStackTrace();
         }
         return isExist;
+    }
+
+    public int size(){
+        return lists.size();
+    }
+
+    public AndroidStrapElement get(int i){
+        return new AndroidStrapElement(lists.get(i));
     }
 
 
@@ -107,11 +110,11 @@ public class AndroidStrapElement {
         isExist = exist;
     }
 
-    public String getElementId() {
-        return elementId;
+    private String getElementId() {
+        return lists.get(0);
     }
 
-    public void setElementId(String elementId) {
-        this.elementId = elementId;
+    private void setElementId(String elementId) {
+        lists.add(elementId);
     }
 }

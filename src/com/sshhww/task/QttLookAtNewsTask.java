@@ -35,6 +35,7 @@ public class QttLookAtNewsTask implements BaseTask  {
     }
 
 
+
     @Override
     public void runTask()   {
         if(!DriverCommon.isExistByPackageName("com.jifen.qukan")){
@@ -54,34 +55,35 @@ public class QttLookAtNewsTask implements BaseTask  {
             BaseUtil.wait(10);
             DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
             BaseUtil.wait(1);
-            click(DriverCommon.getAndroidStrapElementByXpath("//android.widget.TextView[@resource-id='com.jifen.qukan:id/sq']"),true);
+            click(DriverCommon.getAndroidStrapElementByXpath("//android.support.v7.widget.RecyclerView[@resource-id='com.jifen.qukan:id/kx']/android.widget.LinearLayout").get(0),true);
             BaseUtil.wait(3);
 
             //新闻
             if(DriverCommon.getAndroidStrapElementByXpath("//android.widget.RelativeLayout[@resource-id='com.jifen.qukan:id/w']").isExist()){
                 Logger.info("当前打开为新闻类型");
-
+                DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
+                click(DriverCommon.getAndroidStrapElementByXpath("//android.view.View[contains(@content-desc,'展开查看全文')]"), false);
+                BaseUtil.wait(BaseUtil.getNumberRange(2,5));
+                DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
+                BaseUtil.wait(BaseUtil.getNumberRange(2,5));
+                DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
+                BaseUtil.wait(BaseUtil.getNumberRange(2,5));
+                DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
+                BaseUtil.wait(BaseUtil.getNumberRange(2,5));
+                DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
+                BaseUtil.wait(BaseUtil.getNumberRange(2,5));
+                click(DriverCommon.getAndroidStrapElementById("com.jifen.qukan:id/d1"), true);
             //视频
             }else if(DriverCommon.getAndroidStrapElementByXpath("//android.widget.FrameLayout[@resource-id='com.jifen.qukan:id/a48']").isExist()){
                 Logger.info("当前打开为视频类型");
-
+                BaseUtil.wait(BaseUtil.getNumberRange(12,15));
+                DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
+                BaseUtil.wait(BaseUtil.getNumberRange(12,15));
+                click(DriverCommon.getAndroidStrapElementById("com.jifen.qukan:id/kq"),true);
             }else{
                 DriverCommon.pressKeyCode(4);
                 continue;
             }
-
-            DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
-
-            click(DriverCommon.getAndroidStrapElementByXpath("//android.view.View[contains(@content-desc,'展开查看全文')]"),true);
-
-            BaseUtil.wait(3);
-            DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
-            BaseUtil.wait(3);
-            DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
-            BaseUtil.wait(3);
-            DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
-            BaseUtil.wait(3);
-            click(DriverCommon.getAndroidStrapElementById("com.jifen.qukan:id/view_back"),true);
         }
     }
     private boolean repairStep(){

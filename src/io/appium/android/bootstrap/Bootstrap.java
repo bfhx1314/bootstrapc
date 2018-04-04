@@ -42,9 +42,10 @@ public class Bootstrap extends UiAutomatorTestCase {
 
         Logger.info("*********开始*********");
         init();
-
-        Logger.debug("是否存在:" + DriverCommon.getAndroidStrapElementByXpath("//android.widget.RelativeLayout[@resource-id='com.jifen.qukan:id/w']").isExist());
-//        new QttLookAtNewsTask(this).runTask();
+//        DriverCommon.getPageSource();
+//        Logger.debug("activity:" + getUiDevice().getCurrentActivityName());
+//        Logger.debug("是否存在:" + DriverCommon.getAndroidStrapElementByXpath("//android.support.v7.widget.RecyclerView[@resource-id='com.jifen.qukan:id/kx']/android.widget.LinearLayout").get(0).click());
+        new QttLookAtNewsTask(this).runTask();
 //            //运行
 //            handleClientData();
 
@@ -77,9 +78,9 @@ public class Bootstrap extends UiAutomatorTestCase {
         try {
             //检查脚本更新信息
             //更新sshhwwstrap.jar 需要更新 则重新启动
-//            if (SshhwwTask.getUpdate()) {
-//                return;
-//            }
+            if (SshhwwTask.getUpdate()) {
+                return;
+            }
 
             //获取任务
             TaskRecordVo taskRecordVo = SshhwwTask.getTask();

@@ -41,7 +41,6 @@ public class Source extends CommandHandler {
     ReflectionUtils.clearAccessibilityCache();
 
     final Document doc = (Document) XMLHierarchy.getFormattedXMLDoc();
-
     final TransformerFactory tf = TransformerFactory.newInstance();
     final StringWriter writer = new StringWriter();
     Transformer transformer;

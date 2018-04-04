@@ -6,8 +6,12 @@ import com.sshhww.common.bean.CMD;
 import com.sshhww.common.bean.DragParams;
 import com.sshhww.common.bean.PressKeyParams;
 import io.appium.android.bootstrap.Logger;
+import org.dom4j.*;
+import org.dom4j.io.SAXReader;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Iterator;
 
 public class DriverCommon {
 
@@ -171,6 +175,35 @@ public class DriverCommon {
         return false;
     }
 
+    public static Document getPageSource(){
+        CMD cmd = new CMD();
+        cmd.setCmd("action");
+        cmd.setAction("source");
+        cmd.setParames(null);
+        String res = Driver.runStep(cmd.toString());
+        String value = null;
+        try {
+            JSONObject j = new JSONObject(res);
+            if (j.getInt("status") == 0) {
+
+                value = j.get("value").toString();
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        Document document = null;
+        try {
+            document = DocumentHelper.parseText(value);
+        }catch (DocumentException e){
+            e.printStackTrace();
+        }
+        Element element = ((Element)document.selectSingleNode("//android.support.v7.widget.RecyclerView[@resource-id='com.jifen.qukan:id/kx']/android.widget.LinearLayout"));
+        Logger.debug(element.getName());
+
+        return document;
+
+    }
 
 
 }

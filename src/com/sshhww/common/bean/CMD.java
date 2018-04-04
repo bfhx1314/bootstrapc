@@ -1,7 +1,5 @@
 package com.sshhww.common.bean;
 
-
-
 public class CMD{
     String cmd;
     String action;
@@ -34,7 +32,7 @@ public class CMD{
     public String toString(){
 
         return "{\"cmd\":\"" + getCmd() + "\",\"action\":\"" + getAction() + "\",\"params\":"  +
-                getParames() + "}";
+                (parames == null ? "{}" :  getParames()) + "}";
 
     }
 
