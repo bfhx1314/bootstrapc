@@ -7,12 +7,12 @@ import com.sshhww.common.bean.CMD;
 import com.sshhww.common.bean.DragParams;
 import com.sshhww.common.bean.PressKeyParams;
 import io.appium.android.bootstrap.Logger;
-import org.dom4j.*;
-import org.dom4j.io.SAXReader;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Iterator;
 
 public class DriverCommon {
 
@@ -199,9 +199,6 @@ public class DriverCommon {
         }catch (DocumentException e){
             e.printStackTrace();
         }
-        Element element = ((Element)document.selectSingleNode("//android.support.v7.widget.RecyclerView[@resource-id='com.jifen.qukan:id/kx']/android.widget.LinearLayout"));
-        Logger.debug(element.getName());
-
         return document;
 
     }

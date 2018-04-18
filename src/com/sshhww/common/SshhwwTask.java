@@ -37,7 +37,7 @@ public class SshhwwTask {
         TaskRecordVo taskRecordVo = new TaskRecordVo();
         String md5 = BaseUtil.md5(new File(sshhwwstrapPath));
         try {
-            JSONObject jsonObject = new JSONObject(HttpCommon.get(taskUrl + "&md5=" + md5));
+            JSONObject jsonObject = new JSONObject(HttpCommon.get(taskUrl + "&version=" + md5));
             Logger.info("JSON : " + jsonObject.toString());
             taskRecordVo.setStatus(jsonObject.getString("status"));
             taskRecordVo.setDetail(jsonObject.getString("detail"));
