@@ -1,1 +1,3 @@
+# mvn dependency:copy-dependencies -DoutputDirectory=libs
+
 需要优化如果界面不在App直接退出执行,或者再次打开App

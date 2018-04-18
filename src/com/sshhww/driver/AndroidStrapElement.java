@@ -7,6 +7,8 @@ import com.sshhww.common.bean.TextParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.util.LinkedList;
+import java.util.List;
 
 public class AndroidStrapElement {
 
@@ -17,8 +19,17 @@ public class AndroidStrapElement {
 
     private int tryNnm = 10;
 
+    private List<String> lists = new LinkedList<>();
+
     public AndroidStrapElement(By by){
         ele = by.toString();
+        find();
+
+    }
+
+    private AndroidStrapElement(String elementId){
+        setElementId(elementId);
+        setExist(true);
         findIt();
     }
 
@@ -36,7 +47,9 @@ public class AndroidStrapElement {
 
                 JSONArray jsonArray = j.getJSONArray("value");
                 if(jsonArray.length() > 0) {
-                    setElementId(jsonArray.getJSONObject(0).getString("ELEMENT"));
+                    for(int i = 0 ; i < jsonArray.length() ; i ++) {
+                        lists.add(jsonArray.getJSONObject(i).getString("ELEMENT"));
+                    }
                     setExist(true);
                 }
             }else if(j.getInt("status") == 13){ //页面未加载完毕
@@ -50,6 +63,14 @@ public class AndroidStrapElement {
             e.printStackTrace();
         }
         return isExist;
+    }
+
+    public int size(){
+        return lists.size();
+    }
+
+    public AndroidStrapElement get(int i){
+        return new AndroidStrapElement(lists.get(i));
     }
 
 
@@ -106,11 +127,11 @@ public class AndroidStrapElement {
         isExist = exist;
     }
 
-    public String getElementId() {
-        return elementId;
+    private String getElementId() {
+        return lists.get(0);
     }
 
-    public void setElementId(String elementId) {
-        this.elementId = elementId;
+    private void setElementId(String elementId) {
+        lists.add(elementId);
     }
 }
