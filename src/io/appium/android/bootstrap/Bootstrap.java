@@ -42,11 +42,9 @@ public class Bootstrap extends UiAutomatorTestCase {
 
         Logger.info("*********开始*********");
         init();
-
-        Logger.debug("是否存在:" + DriverCommon.getAndroidStrapElementByXpath("//android.widget.RelativeLayout[@resource-id='com.jifen.qukan:id/w']").isExist());
-//        new QttLookAtNewsTask(this).runTask();
-//            //运行
-//            handleClientData();
+////        new QttLookAtNewsTask(this).runTask();
+//        //运行
+        handleClientData();
 
         Logger.info("*********结束*********");
     }
@@ -56,11 +54,12 @@ public class Bootstrap extends UiAutomatorTestCase {
      */
     private void runInit(){
         Logger.info("current package name: " + getUiDevice().getCurrentPackageName());
-        //解锁
-        unlock();
+
         settings();
         //支持中文
         unicode();
+        //解锁
+        unlock();
     }
 
     /**
@@ -77,9 +76,9 @@ public class Bootstrap extends UiAutomatorTestCase {
         try {
             //检查脚本更新信息
             //更新sshhwwstrap.jar 需要更新 则重新启动
-//            if (SshhwwTask.getUpdate()) {
-//                return;
-//            }
+            if (SshhwwTask.getUpdate()) {
+                return;
+            }
 
             //获取任务
             TaskRecordVo taskRecordVo = SshhwwTask.getTask();
@@ -129,7 +128,16 @@ public class Bootstrap extends UiAutomatorTestCase {
             BaseUtil.returnExec("chmod 777 " + SshhwwTask.UNLOCK_APK_PATH);
             DriverCommon.installApk(SshhwwTask.UNLOCK_APK_PATH);
         }
-        DriverCommon.startApp("io.appium.unlock/.Unlock -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000");
+        int i = 5;
+        while(DriverCommon.isLocked()) {
+            if(i<=0){
+                Logger.error("屏幕解锁失败");
+                return;
+            }
+            DriverCommon.startApp("io.appium.unlock/.Unlock -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000");
+            i--;
+        }
+
     }
 
     private void settings(){

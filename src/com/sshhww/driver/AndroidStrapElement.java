@@ -1,6 +1,7 @@
 package com.sshhww.driver;
 
 
+import com.sshhww.common.BaseUtil;
 import com.sshhww.common.bean.CMD;
 import com.sshhww.common.bean.TextParams;
 import org.json.JSONArray;
@@ -14,8 +15,19 @@ public class AndroidStrapElement {
 
     private String ele ;
 
+    private int tryNnm = 10;
+
     public AndroidStrapElement(By by){
         ele = by.toString();
+        findIt();
+    }
+
+    public boolean find(){
+        tryNnm = 10;
+        return findIt();
+    }
+
+    private boolean findIt(){
         String res = Driver.runStep(ele);
 
         try {
@@ -27,24 +39,11 @@ public class AndroidStrapElement {
                     setElementId(jsonArray.getJSONObject(0).getString("ELEMENT"));
                     setExist(true);
                 }
-            }
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-
-    }
-
-    public boolean find(){
-        String res = Driver.runStep(ele);
-
-        try {
-            JSONObject j = new JSONObject(res);
-            if (j.getInt("status") == 0) {
-
-                JSONArray jsonArray = j.getJSONArray("value");
-                if(jsonArray.length() > 0) {
-                    setElementId(jsonArray.getJSONObject(0).getString("ELEMENT"));
-                    setExist(true);
+            }else if(j.getInt("status") == 13){ //页面未加载完毕
+                BaseUtil.wait(1);
+                tryNnm --;
+                if(tryNnm <= 0) {
+                    find();
                 }
             }
         }catch (JSONException e){

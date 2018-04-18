@@ -2,6 +2,7 @@ package com.sshhww.driver;
 
 
 import com.sshhww.common.BaseUtil;
+import com.sshhww.common.RegExp;
 import com.sshhww.common.bean.CMD;
 import com.sshhww.common.bean.DragParams;
 import com.sshhww.common.bean.PressKeyParams;
@@ -171,6 +172,12 @@ public class DriverCommon {
         return false;
     }
 
+
+
+    public static boolean isLocked(){
+        String properties = BaseUtil.returnExec(" dumpsys window");
+        return RegExp.findCharacters(properties,"mShowingLockscreen=true|mDreamingLockscreen=true");
+    }
 
 
 }
