@@ -3,6 +3,7 @@ package com.sshhww.driver;
 
 import com.sshhww.common.BaseUtil;
 import com.sshhww.common.RegExp;
+import com.sshhww.common.SystemInfo;
 import com.sshhww.common.bean.CMD;
 import com.sshhww.common.bean.DragParams;
 import com.sshhww.common.bean.PressKeyParams;
@@ -117,8 +118,14 @@ public class DriverCommon {
             startY = MIN_HEIGHT;
             endX = MIDST_WIDTH;
             endY = MAX_HEIGHT;
+        }else{
+            Logger.error("无法识别滑动类型");
         }
-
+        Logger.debug("direction:" + direction);
+        Logger.debug("startX:" +startX);
+        Logger.debug("startY:" +startY);
+        Logger.debug("endX:" +endX);
+        Logger.debug("endY:" +endY);
         drag(startX,startY,endX,endY,is_RuleSlide);
 
     }
@@ -206,7 +213,16 @@ public class DriverCommon {
 
     public static boolean isLocked(){
         String properties = BaseUtil.returnExec(" dumpsys window");
-        return RegExp.findCharacters(properties,"mShowingLockscreen=true|mDreamingLockscreen=true");
+        boolean isLocked;
+
+        if(SystemInfo.getBrand().equalsIgnoreCase("Xiaomi:")) {
+            isLocked = RegExp.findCharacters(properties, "showing=true");
+            Logger.debug("isLocked:" + isLocked);
+        }else {
+            isLocked = RegExp.findCharacters(properties, "mShowingLockscreen=true|mDreamingLockscreen=true");
+            Logger.debug("isLocked fei:" + isLocked);
+        }
+        return isLocked;
     }
 
 
