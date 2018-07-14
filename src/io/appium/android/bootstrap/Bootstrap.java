@@ -42,7 +42,7 @@ public class Bootstrap extends UiAutomatorTestCase {
 
         Logger.info("*********开始*********");
         init();
-////        new QttLookAtNewsTask(this).runTask();
+//        new TaoBaoLiveTask(this,"{\"search\":\"服装\"}").runTask();
 //        //运行
         handleClientData();
 
@@ -107,7 +107,7 @@ public class Bootstrap extends UiAutomatorTestCase {
                 runScript(new QttLookAtNewsTask(this));
                 break;
             case TaskEnum.TAOBAOLIVE:
-                runScript(new TaoBaoLiveTask());
+                runScript(new TaoBaoLiveTask(this,data));
                 break;
             default:
                 Logger.error("未找到定义的任务类型脚本");
