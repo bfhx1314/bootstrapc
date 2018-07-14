@@ -7,7 +7,6 @@ import io.appium.android.bootstrap.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.File;
-import java.util.ArrayList;
 
 /**
  * Created by limengnan on 2018/3/9.

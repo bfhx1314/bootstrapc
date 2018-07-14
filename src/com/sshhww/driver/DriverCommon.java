@@ -1,6 +1,7 @@
 package com.sshhww.driver;
 
 
+import com.sshhww.SshhwwException;
 import com.sshhww.common.BaseUtil;
 import com.sshhww.common.RegExp;
 import com.sshhww.common.SystemInfo;
@@ -223,6 +224,21 @@ public class DriverCommon {
             Logger.debug("isLocked fei:" + isLocked);
         }
         return isLocked;
+    }
+
+    public static AndroidStrapElement findAndroidElementAndEvent(By by) throws SshhwwException {
+
+        int i = 0;
+        AndroidStrapElement androidStrapElement = new AndroidStrapElement(by);
+        while(!androidStrapElement.find()){
+            if(i>=9){
+                throw new SshhwwException(10,"元素不存在:" + by.toString());
+            }
+            BaseUtil.wait(1);
+            i++;
+        }
+        return androidStrapElement;
+
     }
 
 
