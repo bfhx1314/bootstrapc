@@ -27,7 +27,6 @@ import com.sshhww.task.BaseTask;
 import com.sshhww.task.QttLookAtNewsTask;
 import com.sshhww.task.TaoBaoLiveTask;
 import com.sshhww.task.TaskEnum;
-import io.appium.android.bootstrap.handler.Wake;
 
 
 /**
@@ -43,9 +42,9 @@ public class Bootstrap extends UiAutomatorTestCase {
     public void testRunServer() {
 
         Logger.info("*********开始*********");
-        Logger.setLogServer(true);
+        Logger.setLogServer(false);
         init();
-//        new TaoBaoLiveTask(this,"{\"search\":\"服装\"}").runTask();
+//        new TaoBaoLiveTask("{\"search\":\"服装\",\"type\":\"live\"}").runTask();
 //        //运行
         handleClientData();
 
@@ -110,7 +109,7 @@ public class Bootstrap extends UiAutomatorTestCase {
                 runScript(new QttLookAtNewsTask(this));
                 break;
             case TaskEnum.TAOBAOLIVE:
-                runScript(new TaoBaoLiveTask(this,data));
+                runScript(new TaoBaoLiveTask(data));
                 break;
             default:
                 Logger.error("未找到定义的任务类型脚本");

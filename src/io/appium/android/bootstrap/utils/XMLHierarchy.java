@@ -21,6 +21,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import io.appium.android.bootstrap.AndroidElement;
 import io.appium.android.bootstrap.AndroidElementsHash;
+import io.appium.android.bootstrap.Logger;
 import io.appium.android.bootstrap.exceptions.ElementNotFoundException;
 import io.appium.android.bootstrap.exceptions.InvalidSelectorException;
 import io.appium.android.bootstrap.exceptions.PairCreationException;
@@ -78,17 +79,21 @@ public abstract class XMLHierarchy {
 
     NodeList nodes;
     try {
+      Logger.debug("XMLHierarchy evaluate nodes");
       nodes = (NodeList) xpathExpression.evaluate(root, XPathConstants.NODESET);
     } catch (XPathExpressionException e) {
       e.printStackTrace();
       throw new ElementNotFoundException("XMLWindowHierarchy could not be parsed: " + e.getMessage());
     }
+    Logger.debug("XMLHierarchy evaluate nodes done");
 
     ArrayList<ClassInstancePair> pairs = new ArrayList<ClassInstancePair>();
+    Logger.debug("nodes count:" + nodes.getLength());
     for (int i = 0; i < nodes.getLength(); i++) {
       if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
         try {
           pairs.add(getPairFromNode(nodes.item(i)));
+          Logger.debug("node get:" + i);
         } catch (PairCreationException e) { }
       }
     }
@@ -106,11 +111,20 @@ public abstract class XMLHierarchy {
   }
 
   private static AccessibilityNodeInfo getRootAccessibilityNode() {
+    Logger.debug("AccessibilityNodeInfo getAccessibilityRootNode start");
+    int count = 20;
     while(true){
       AccessibilityNodeInfo root = UiAutomatorBridge.getInstance().getQueryController().getAccessibilityRootNode();
       if (root != null) {
+        Logger.debug("AccessibilityNodeInfo getAccessibilityRootNode done");
         return root;
       }
+      count --;
+      if(count == 0){
+        Logger.error("获取getAccessibilityRootNode失败");
+        return null;
+      }
+      Logger.debug("AccessibilityNodeInfo getAccessibilityRootNode again");
     }
   }
 

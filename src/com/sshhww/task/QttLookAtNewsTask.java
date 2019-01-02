@@ -16,7 +16,7 @@ public class QttLookAtNewsTask implements BaseTask  {
 
 
 
-    private final String APK_URL = "http://120.26.205.248:8080/apk/sshhww/apk/qukan.2.8.20.001.apk";
+    private final String APK_URL = "http://101.132.238.133:8080/apk/sshhww/apk/qukan.2.8.20.001.apk";
     private final String APK_PATH = "/data/local/tmp/qukan.2.8.20.001.apk";
 
     private final String START_ACTIVITY = "com.jifen.qukan/.view.activity.JumpActivity";

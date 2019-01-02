@@ -15,15 +15,17 @@ public class SshhwwTask {
 
     private final static String baseParameter = "type=appium&uuid="+ Build.SERIAL+"&deviceName=" + Build.MODEL;
 
-    private final static String taskUrl = "http://120.26.205.248:8080/update/wxcm/task.do?" + baseParameter;
-    private final static String taskDoneUrl = "http://120.26.205.248:8080/update/wxcm/taskDone.do?" + baseParameter + "&taskRecordId=";
+    private final static String baseUrl = "http://101.132.238.133:8080/";
 
-    private final static String jarUpdateUrl = "http://120.26.205.248:8080/update/wxcm/update.do?version=0&type=jar&md5=";
+    private final static String taskUrl = baseUrl + "update/wxcm/task.do?" + baseParameter;
+    private final static String taskDoneUrl = baseUrl + "update/wxcm/taskDone.do?" + baseParameter + "&taskRecordId=";
+
+    private final static String jarUpdateUrl = baseUrl + "update/wxcm/update.do?version=0&type=jar&md5=";
 
 
-    public final static String UPLOCK_APK_URL = "http://120.26.205.248:8080/apk/sshhww/unlock_apk-debug.apk";
-    public final static String SETTING_APK_URL = "http://120.26.205.248:8080/apk/sshhww/settings_apk-debug.apk";
-    public final static String UNICODEIME_APK_URL = "http://120.26.205.248:8080/apk/sshhww/UnicodeIME-debug.apk";
+    public final static String UPLOCK_APK_URL = baseUrl + "apk/sshhww/unlock_apk-debug.apk";
+    public final static String SETTING_APK_URL = baseUrl + "apk/sshhww/settings_apk-debug.apk";
+    public final static String UNICODEIME_APK_URL = baseUrl + "apk/sshhww/UnicodeIME-debug.apk";
 
     public final static String UNLOCK_APK_PATH = "/data/local/tmp/unlock_apk-debug.apk";
     public final static String SETTINGS_APK_PATH = "/data/local/tmp/settings_apk-debug.apk";

@@ -1,13 +1,18 @@
 package com.sshhww.driver;
 
 
+import com.android.uiautomator.core.UiDevice;
 import com.sshhww.SshhwwException;
 import com.sshhww.common.BaseUtil;
 import com.sshhww.common.RegExp;
 import com.sshhww.common.SystemInfo;
 import com.sshhww.common.bean.CMD;
+import com.sshhww.common.bean.ClickParams;
 import com.sshhww.common.bean.DragParams;
 import com.sshhww.common.bean.PressKeyParams;
+import io.appium.android.bootstrap.AndroidCommand;
+import io.appium.android.bootstrap.AndroidCommandResult;
+import io.appium.android.bootstrap.CommandHandler;
 import io.appium.android.bootstrap.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -70,6 +75,17 @@ public class DriverCommon {
         cmd.setAction("drag");
         cmd.setCmd("action");
         cmd.setParames(dragParams);
+        Driver.runStep(cmd.toString());
+    }
+
+    public static void click(int x, int y){
+        ClickParams clickParams = new ClickParams();
+        clickParams.setX(String.valueOf(x));
+        clickParams.setY(String.valueOf(y));
+        CMD cmd = new CMD();
+        cmd.setAction("click");
+        cmd.setCmd("action");
+        cmd.setParames(clickParams);
         Driver.runStep(cmd.toString());
     }
 
@@ -138,7 +154,12 @@ public class DriverCommon {
     }
 
     public static void closeApp(String packageName){
-        BaseUtil.exec("am force-stop " + packageName);
+        BaseUtil.returnExec("am force-stop " + packageName);
+        int num = 10;
+        while(UiDevice.getInstance().getCurrentPackageName().equalsIgnoreCase(packageName) && num > 0){
+            BaseUtil.returnExec("am force-stop " + packageName);
+            num --;
+        }
     }
 
     public static boolean isExistByPackageName(String packageName){
