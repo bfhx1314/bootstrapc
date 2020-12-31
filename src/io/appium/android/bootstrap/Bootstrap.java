@@ -22,10 +22,7 @@ import com.sshhww.common.HttpCommon;
 import com.sshhww.common.SshhwwTask;
 import com.sshhww.common.bean.TaskRecordVo;
 import com.sshhww.driver.*;
-import com.sshhww.task.BaseTask;
-import com.sshhww.task.QttLookAtNewsTask;
-import com.sshhww.task.TaoBaoLiveTask;
-import com.sshhww.task.TaskEnum;
+import com.sshhww.task.*;
 
 
 /**
@@ -34,17 +31,13 @@ import com.sshhww.task.TaskEnum;
 public class Bootstrap extends UiAutomatorTestCase {
 
 
-
-
-
-
     public void testRunServer() {
 
         Logger.info("*********开始*********");
         init();
-//        new TaoBaoLiveTask(this,"{\"search\":\"服装\"}").runTask();
-//        //运行
-        handleClientData();
+//        new SuningTask(this,"{\"taskKey\":\"APPOINTMENT\"}").runTask();
+//        //
+//        handleClientData();
 
         Logger.info("*********结束*********");
     }
@@ -56,7 +49,7 @@ public class Bootstrap extends UiAutomatorTestCase {
         Logger.info("current package name: " + getUiDevice().getCurrentPackageName());
 
         settings();
-        //支持中文
+        //支持中文git
         unicode();
         //解锁
         unlock();

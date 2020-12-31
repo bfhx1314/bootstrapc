@@ -226,6 +226,27 @@ public class DriverCommon {
     }
 
 
+    public static boolean click(int x, int y){
+        CMD cmd = new CMD();
+        cmd.setAction("click");
+        cmd.setCmd("action");
+        cmd.setParames("{\"x\":"+x+",\"y\":"+y+"}");
+
+        String res = Driver.runStep(cmd.toString());
+
+        try {
+            JSONObject j = new JSONObject(res);
+            if (j.getInt("status") == 0 && j.getBoolean("value")) {
+                return true;
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
+
 }
 
 

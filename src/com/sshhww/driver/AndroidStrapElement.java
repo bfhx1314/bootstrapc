@@ -115,6 +115,8 @@ public class AndroidStrapElement {
 
     }
 
+
+
     public String toString(){
         return ele;
     }
