@@ -112,7 +112,8 @@ public class Find extends CommandHandler {
   /**
    * execute implementation.
    *
-   * @see io.appium.android.bootstrap.handler.Find#execute(io.appium.android.
+   * @see io.appium.android.bootstrap.handler.Find
+   * #execute(io.appium.android.
    *      bootstrap.AndroidCommand)
    *
    * @param command

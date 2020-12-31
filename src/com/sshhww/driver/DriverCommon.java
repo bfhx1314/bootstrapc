@@ -1,12 +1,18 @@
 package com.sshhww.driver;
 
 
+import com.android.uiautomator.core.UiDevice;
 import com.sshhww.SshhwwException;
 import com.sshhww.common.BaseUtil;
 import com.sshhww.common.RegExp;
+import com.sshhww.common.SystemInfo;
 import com.sshhww.common.bean.CMD;
+import com.sshhww.common.bean.ClickParams;
 import com.sshhww.common.bean.DragParams;
 import com.sshhww.common.bean.PressKeyParams;
+import io.appium.android.bootstrap.AndroidCommand;
+import io.appium.android.bootstrap.AndroidCommandResult;
+import io.appium.android.bootstrap.CommandHandler;
 import io.appium.android.bootstrap.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -72,6 +78,17 @@ public class DriverCommon {
         Driver.runStep(cmd.toString());
     }
 
+    public static void click(int x, int y){
+        ClickParams clickParams = new ClickParams();
+        clickParams.setX(String.valueOf(x));
+        clickParams.setY(String.valueOf(y));
+        CMD cmd = new CMD();
+        cmd.setAction("click");
+        cmd.setCmd("action");
+        cmd.setParames(clickParams);
+        Driver.runStep(cmd.toString());
+    }
+
 
     public static void drag(String direction,boolean center, boolean is_RuleSlide){
         int startX = 0 ;
@@ -118,8 +135,14 @@ public class DriverCommon {
             startY = MIN_HEIGHT;
             endX = MIDST_WIDTH;
             endY = MAX_HEIGHT;
+        }else{
+            Logger.error("无法识别滑动类型");
         }
-
+        Logger.debug("direction:" + direction);
+        Logger.debug("startX:" +startX);
+        Logger.debug("startY:" +startY);
+        Logger.debug("endX:" +endX);
+        Logger.debug("endY:" +endY);
         drag(startX,startY,endX,endY,is_RuleSlide);
 
     }
@@ -131,7 +154,12 @@ public class DriverCommon {
     }
 
     public static void closeApp(String packageName){
-        BaseUtil.exec("am force-stop " + packageName);
+        BaseUtil.returnExec("am force-stop " + packageName);
+        int num = 10;
+        while(UiDevice.getInstance().getCurrentPackageName().equalsIgnoreCase(packageName) && num > 0){
+            BaseUtil.returnExec("am force-stop " + packageName);
+            num --;
+        }
     }
 
     public static boolean isExistByPackageName(String packageName){
@@ -207,7 +235,16 @@ public class DriverCommon {
 
     public static boolean isLocked(){
         String properties = BaseUtil.returnExec(" dumpsys window");
-        return RegExp.findCharacters(properties,"mShowingLockscreen=true|mDreamingLockscreen=true");
+        boolean isLocked;
+
+        if(SystemInfo.getBrand().equalsIgnoreCase("Xiaomi:")) {
+            isLocked = RegExp.findCharacters(properties, "showing=true");
+            Logger.debug("isLocked:" + isLocked);
+        }else {
+            isLocked = RegExp.findCharacters(properties, "mShowingLockscreen=true|mDreamingLockscreen=true");
+            Logger.debug("isLocked fei:" + isLocked);
+        }
+        return isLocked;
     }
 
     public static AndroidStrapElement findAndroidElementAndEvent(By by) throws SshhwwException {

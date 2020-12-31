@@ -20,6 +20,7 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 import com.sshhww.common.BaseUtil;
 import com.sshhww.common.HttpCommon;
 import com.sshhww.common.SshhwwTask;
+import com.sshhww.common.SystemInfo;
 import com.sshhww.common.bean.TaskRecordVo;
 import com.sshhww.driver.*;
 import com.sshhww.task.*;
@@ -35,9 +36,9 @@ public class Bootstrap extends UiAutomatorTestCase {
 
         Logger.info("*********开始*********");
         init();
-//        new SuningTask(this,"{\"taskKey\":\"APPOINTMENT\"}").runTask();
-//        //
-//        handleClientData();
+//        new TaoBaoLiveTask(this,"{\"search\":\"服装\"}").runTask();
+//        //运行
+        handleClientData();
 
         Logger.info("*********结束*********");
     }
@@ -49,7 +50,7 @@ public class Bootstrap extends UiAutomatorTestCase {
         Logger.info("current package name: " + getUiDevice().getCurrentPackageName());
 
         settings();
-        //支持中文git
+        //支持中文
         unicode();
         //解锁
         unlock();
@@ -68,7 +69,7 @@ public class Bootstrap extends UiAutomatorTestCase {
     public void handleClientData() {
         try {
             //检查脚本更新信息
-            //更新sshhwwstrap.jar 需要更新 则重新启动
+//            更新sshhwwstrap.jar 需要更新 则重新启动
             if (SshhwwTask.getUpdate()) {
                 return;
             }
@@ -114,6 +115,7 @@ public class Bootstrap extends UiAutomatorTestCase {
     }
 
     private void unlock(){
+
         if(!DriverCommon.isExistByPackageName("io.appium.unlock")){
             if(!BaseUtil.isFileExist(SshhwwTask.UNLOCK_APK_PATH)) {
                 HttpCommon.download(SshhwwTask.UPLOCK_APK_URL,SshhwwTask.UNLOCK_APK_PATH);
@@ -123,11 +125,19 @@ public class Bootstrap extends UiAutomatorTestCase {
         }
         int i = 5;
         while(DriverCommon.isLocked()) {
+            Logger.info("屏幕锁定状态");
             if(i<=0){
                 Logger.error("屏幕解锁失败");
                 return;
             }
-            DriverCommon.startApp("io.appium.unlock/.Unlock -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000");
+            BaseUtil.exec("am start -W -n io.appium.unlock/.Unlock -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000");
+            BaseUtil.wait(2);
+            if(SystemInfo.getBrand().equalsIgnoreCase("Xiaomi:")){
+                //亮屏
+//            new Wake().execute(null);
+                //滑动解锁
+                DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
+            }
             i--;
         }
 

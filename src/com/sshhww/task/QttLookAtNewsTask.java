@@ -16,10 +16,11 @@ public class QttLookAtNewsTask implements BaseTask  {
 
 
 
-    private final String APK_URL = "http://120.26.205.248:8080/apk/sshhww/apk/qukan.2.8.20.001.apk";
+    private final String APK_URL = "http://101.132.238.133:8080/apk/sshhww/apk/qukan.2.8.20.001.apk";
     private final String APK_PATH = "/data/local/tmp/qukan.2.8.20.001.apk";
 
-    private final String START_ACTIVITY = "com.jifen.qukan/com.jifen.qukan.view.activity.JumpActivity";
+    private final String START_ACTIVITY = "com.jifen.qukan/.view.activity.JumpActivity";
+//    private final String START_ACTIVITY = "com.jifen.qukan/com.jifen.qkbase.view.activity.JumpActivity";
     private Bootstrap bootstrap;
 
     public QttLookAtNewsTask(Bootstrap bootstrap){
@@ -44,7 +45,7 @@ public class QttLookAtNewsTask implements BaseTask  {
         }
         String currentPage = bootstrap.getUiDevice().getCurrentPackageName();
         Logger.debug("当前页面:" + currentPage);
-        if(currentPage.equalsIgnoreCase(getAppPackage())){
+        if(BaseUtil.isNotEmpty(currentPage) && currentPage.equalsIgnoreCase(getAppPackage())){
             Logger.debug("关闭App");
             DriverCommon.closeApp(currentPage);
         }
@@ -52,12 +53,22 @@ public class QttLookAtNewsTask implements BaseTask  {
         //运行看新闻
         DriverCommon.startApp(START_ACTIVITY);
         Logger.debug("当前页面:" + bootstrap.getUiDevice().getCurrentPackageName());
+
+
+        //如果弹出更新,点击取消
+        AndroidStrapElement updateElement = DriverCommon.getAndroidStrapElementById("com.jifen.qukan:id/du_btn_cancel");
+        if(updateElement.isExist()){
+            updateElement.click();
+        }
+
         int lookAtNewCount = BaseUtil.getNumberRange(8,15);
         for(int i = 0; i < lookAtNewCount; i ++) {
             BaseUtil.wait(10);
             DriverCommon.drag(DragEnum.UPSLIDE.getCode(), false, false);
             BaseUtil.wait(1);
-            click(DriverCommon.getAndroidStrapElementByXpath("//android.widget.TextView[@resource-id='com.jifen.qukan:id/inew_text_title']"),true);
+//            click(DriverCommon.getAndroidStrapElementByXpath("//android.widget.TextView[@resource-id='com.jifen.qukan:id/inew_text_title']"),true);
+            click(DriverCommon.getAndroidStrapElementById("com.jifen.qukan:id/inew_text_title"),true);
+
             BaseUtil.wait(3);
 
 
@@ -106,7 +117,8 @@ public class QttLookAtNewsTask implements BaseTask  {
         }
 
         Logger.error("修复步骤已完成");
-        if(!bootstrap.getUiDevice().getCurrentPackageName().equalsIgnoreCase(getAppPackage())){
+        String current = bootstrap.getUiDevice().getCurrentPackageName();
+        if(BaseUtil.isNotEmpty(current) && !current.equalsIgnoreCase(getAppPackage())){
             DriverCommon.startApp(START_ACTIVITY);
         }
         return false;

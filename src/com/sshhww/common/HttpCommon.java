@@ -86,6 +86,7 @@ public class HttpCommon {
             String savePath=BaseUtil.isExistDir(new File(saveFile).getParent());
             is=response.body().byteStream();
             File file=new File(savePath,new File(saveFile).getName());
+            file.setWritable(true);
             fos=new FileOutputStream(file);
             while((len = is.read(buf))!=-1){
                 fos.write(buf,0,len);
